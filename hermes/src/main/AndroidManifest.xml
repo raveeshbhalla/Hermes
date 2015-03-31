@@ -15,6 +15,11 @@
             android:enabled="true"
             android:exported="true" >
         </receiver>
+        <receiver
+            android:name=".receivers.ExponentialBackoffReceiver"
+            android:enabled="true"
+            android:exported="true" >
+        </receiver>
     </application>
 
 </manifest>
