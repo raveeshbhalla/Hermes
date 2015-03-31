@@ -19,7 +19,7 @@ public class GcmBroadcastReceiver extends HermesBroadcastReceiver {
              */
             Log.d("HermesExample", "Device Registered, ID is "+registrationID);
         }
-        else{
+        else if (!error){
             /**
              * GCM Message received, handle it as per your requirements
              */

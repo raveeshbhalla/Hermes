@@ -13,6 +13,7 @@ public class HermesBroadcastReceiver extends BroadcastReceiver {
     }
 
     protected boolean gotRegistrationId = false;
+    protected boolean error = false;
     protected String registrationID;
 
     @Override
@@ -23,8 +24,15 @@ public class HermesBroadcastReceiver extends BroadcastReceiver {
             if (Hermes.CALLBACK != null) {
                 Hermes.CALLBACK.registrationComplete(registrationID);
             }
+        } else if (intent.getExtras() != null && intent.getExtras().get("error") != null) {
+            error = true;
+            if (Hermes.CALLBACK != null){
+                Hermes.CALLBACK.registrationFailed(intent.getExtras().get("error").toString());
+            }
+            ExponentialBackoffReceiver.attemptRegistration(context, Hermes.getDelay(), Hermes.getSenderId());
         } else {
             Log.d(Hermes.TAG, "GCM Message Received");
+
         }
     }
 }

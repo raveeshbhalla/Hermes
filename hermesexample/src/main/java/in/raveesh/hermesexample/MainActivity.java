@@ -50,4 +50,14 @@ public class MainActivity extends ActionBarActivity implements RegistrationCallb
     public void registrationFailed(String msg) {
         textView.setText("Registration failed: "+msg);
     }
+
+    @Override
+    public void setExponentialBackoff(int time) {
+        textView.setText("Set exponential backoff for "+time);
+    }
+
+    @Override
+    public void backoffComplete(int time) {
+        textView.setText("Exponential backoff complete after "+time);
+    }
 }

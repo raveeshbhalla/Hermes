@@ -14,6 +14,8 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 
+import in.raveesh.hermes.receivers.ExponentialBackoffReceiver;
+
 /**
  * Created by Raveesh on 31/03/15.
  */
@@ -24,6 +26,7 @@ public class Hermes {
     public final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
+    public static final int DEFAULT_BACKOFF = 60000;
     public static String SHARED_PREFERENCES_FILENAME = "HermesFileName";
 
     private static String regID;
@@ -31,6 +34,7 @@ public class Hermes {
     private static String SENDER_ID = "";
     private static SharedPreferences sharedPreferences;
     public static RegistrationCallback CALLBACK;
+    private static int delay = DEFAULT_BACKOFF;
 
 
     /**
@@ -38,12 +42,14 @@ public class Hermes {
      * it doesn't, display a dialog that allows users to download the APK from
      * the Google Play Store or enable it in the device's system settings.
      */
-    public static boolean checkPlayServices(Activity activity) {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+    public static boolean checkPlayServices(Context context) {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
                 Log.d(TAG, "Google Play Services is not available, but the issue is User Recoverable");
-                GooglePlayServicesUtil.getErrorDialog(resultCode, activity, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                if (context instanceof Activity) {
+                    GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity) context, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                }
             } else {
                 /**
                  * TODO: Handle all issue related to non User recoverable error
@@ -55,26 +61,26 @@ public class Hermes {
         return true;
     }
 
-    public static void register(Activity activity, String senderID) throws GcmRegistrationException {
-        register(activity, senderID, null);
+    public static void register(Context context, String senderID) throws GcmRegistrationException {
+        register(context, senderID, null);
     }
 
-    public static void register(Activity activity, String senderID, RegistrationCallback callback, SharedPreferences prefs) throws GcmRegistrationException {
+    public static void register(Context context, String senderID, RegistrationCallback callback, SharedPreferences prefs) throws GcmRegistrationException {
         setGCMPreferences(prefs);
-        register(activity, senderID, callback);
+        register(context, senderID, callback);
     }
 
-    public static void register(Activity activity, String senderID, RegistrationCallback callback) throws GcmRegistrationException {
+    public static void register(Context context, String senderID, RegistrationCallback callback) throws GcmRegistrationException {
         if (callback != null){
             CALLBACK = callback;
         }
 
         SENDER_ID = senderID;
-        if (checkPlayServices(activity)) {
-            gcm = GoogleCloudMessaging.getInstance(activity);
-            regID = getRegistrationId(activity);
+        if (checkPlayServices(context)) {
+            gcm = GoogleCloudMessaging.getInstance(context);
+            regID = getRegistrationId(context);
             if (regID.isEmpty()) {
-                registerInBackground(activity);
+                registerInBackground(context);
             }
             else if (callback != null){
                 callback.registrationComplete(regID);
@@ -182,12 +188,6 @@ public class Hermes {
                 return msg;
             }
 
-            private void onPostExecute(String msg){
-                if (msg.contains("Error") && CALLBACK != null){
-                    CALLBACK.registrationFailed(msg);
-                }
-            }
-
 
             /**
              * Stores the registration ID and app versionCode in the application's
@@ -219,7 +219,19 @@ public class Hermes {
         }.execute(null, null, null);
     }
 
-    public static void pause(Activity activity){
+    public static void pause(Context context){
         CALLBACK = null;
+    }
+
+    public static void setDelay(int delay) {
+        Hermes.delay = delay;
+    }
+
+    public static int getDelay(){
+        return delay;
+    }
+
+    public static String getSenderId(){
+        return SENDER_ID;
     }
 }
