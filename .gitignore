@@ -1,0 +1,16 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+
+Hermes.iml
+local.properties
+gradle
+build
+.idea
+hermes/build
+hermesexample/build
+hermes/hermes.iml
+hermesexample/hermesexample.iml
