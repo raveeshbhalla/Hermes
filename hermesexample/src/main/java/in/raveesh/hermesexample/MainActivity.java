@@ -15,19 +15,21 @@ public class MainActivity extends ActionBarActivity implements RegistrationCallb
 
     TextView textView;
 
+    private static String SENDER_ID = "466072357289";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         textView = (TextView)findViewById(R.id.gcmID);
-        Hermes.register(this, "893452105076", this);
+        Hermes.register(this, SENDER_ID, this);
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        Hermes.register(this, "893452105076");
+        Hermes.register(this, SENDER_ID);
     }
 
     @Override

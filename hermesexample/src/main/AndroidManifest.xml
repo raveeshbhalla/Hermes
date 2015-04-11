@@ -39,6 +39,7 @@
                 <category android:name="in.raveesh.hermesexample" />
             </intent-filter>
         </receiver>
+        <service android:name=".GcmIntentService" android:exported="true" android:enabled="true"/>
     </application>
 
 </manifest>
