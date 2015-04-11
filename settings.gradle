@@ -1,1 +1,1 @@
-include ':hermes', ':hermesexample'
+include ':hermes', ':hermesexample', ':gcmendpoint'
