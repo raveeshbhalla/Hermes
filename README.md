@@ -17,6 +17,16 @@ Registering a user on GCM with Hermes is ridiculously simple:
 
 A [BroadcastReceiver must be extended](https://github.com/raveeshbhalla/Hermes/blob/master/hermesexample/src/main/java/in/raveesh/hermesexample/GcmBroadcastReceiver.java) as well, and a few lines added to the [AndroidManifest as shown in the example](https://github.com/raveeshbhalla/Hermes/blob/master/hermesexample/src/main/AndroidManifest.xml).
 
+# Integration
+Just add the following lines to your build.gradle
+    repositories {
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    }
+
+    dependencies {
+        compile 'in.raveesh:hermes:0.1.0-SNAPSHOT'
+    }
+
 # TODOs
 - Add documentation
 - Provide better step-by-step guidance
