@@ -4,7 +4,7 @@
    https://github.com/GoogleCloudPlatform/gradle-appengine-templates/tree/master/GcmEndpoints
 */
 
-package in.raveesh.hermes.gcmendpoint;
+package in.raveesh.hermes.backend;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 import javax.inject.Named;
 
-import static in.raveesh.hermes.gcmendpoint.OfyService.ofy;
+import static in.raveesh.hermes.backend.OfyService.ofy;
 
 /**
  * A registration endpoint class we are exposing for a device's GCM registration id on the backend
@@ -28,7 +28,7 @@ import static in.raveesh.hermes.gcmendpoint.OfyService.ofy;
  * authentication! If this app is deployed, anyone can access this endpoint! If
  * you'd like to add authentication, take a look at the documentation.
  */
-@Api(name = "registration", version = "v1", namespace = @ApiNamespace(ownerDomain = "gcmendpoint.hermes.raveesh.in", ownerName = "gcmendpoint.hermes.raveesh.in", packagePath = ""))
+@Api(name = "registration", version = "v1", namespace = @ApiNamespace(ownerDomain = "backend.hermes.raveesh.in", ownerName = "backend.hermes.raveesh.in", packagePath = ""))
 public class RegistrationEndpoint {
 
     private static final Logger log = Logger.getLogger(RegistrationEndpoint.class.getName());

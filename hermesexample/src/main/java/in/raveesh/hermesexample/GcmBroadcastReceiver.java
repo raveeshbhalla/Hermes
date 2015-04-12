@@ -12,7 +12,7 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
 import java.io.IOException;
 
-import in.raveesh.hermes.gcmendpoint.registration.Registration;
+import in.raveesh.hermes.backend.registration.Registration;
 import in.raveesh.hermes.receivers.HermesBroadcastReceiver;
 
 public class GcmBroadcastReceiver extends HermesBroadcastReceiver {

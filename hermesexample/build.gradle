@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+    }
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
-
     defaultConfig {
         applicationId "in.raveesh.hermesexample"
         minSdkVersion 9
@@ -25,7 +26,8 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':hermes')
     compile 'com.android.support:appcompat-v7:22.0.0'
-    compile project(":hermes")
-    compile project(path: ':gcmendpoint', configuration: 'android-endpoints')
+    compile 'com.google.android.gms:play-services:7.0.0'
+    compile project(path: ':gcm', configuration: 'android-endpoints')
 }

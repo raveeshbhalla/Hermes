@@ -13,6 +13,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import in.raveesh.hermes.receivers.ExponentialBackoffReceiver;
 
@@ -165,7 +166,7 @@ public class Hermes {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
                     regID = gcm.register(SENDER_ID);
-                    msg = "Device registered, registration ID=" + regID;
+                    msg = String.format(Locale.ENGLISH, "Device registered for Sender ID %s, registration ID is %s", SENDER_ID, regID);
 
                     // You should send the registration ID to your server over HTTP,
                     // so it can use GCM/HTTP or CCS to send messages to your app.

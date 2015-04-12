@@ -13,8 +13,8 @@
         <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
         <init-param>
             <param-name>services</param-name>
-            <param-value>in.raveesh.hermes.gcmendpoint.RegistrationEndpoint,
-                in.raveesh.hermes.gcmendpoint.MessagingEndpoint
+            <param-value>in.raveesh.hermes.backend.RegistrationEndpoint,
+                in.raveesh.hermes.backend.MessagingEndpoint
             </param-value>
         </init-param>
     </servlet>

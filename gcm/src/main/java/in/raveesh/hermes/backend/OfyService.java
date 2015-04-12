@@ -1,4 +1,4 @@
-package in.raveesh.hermes.gcmendpoint;
+package in.raveesh.hermes.backend;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;

@@ -1,4 +1,4 @@
-package in.raveesh.hermes.gcmendpoint;
+package in.raveesh.hermes.backend;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
