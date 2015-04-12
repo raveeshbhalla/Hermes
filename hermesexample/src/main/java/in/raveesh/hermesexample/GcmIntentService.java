@@ -1,18 +1,14 @@
 package in.raveesh.hermesexample;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +16,10 @@ import java.util.logging.Logger;
  * Created by Raveesh on 12/04/15.
  */
 public class GcmIntentService extends IntentService {
+
+    public GcmIntentService(){
+        super("GcmIntentService");
+    }
 
     public GcmIntentService(String str){
         super(str);
@@ -45,6 +45,7 @@ public class GcmIntentService extends IntentService {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
                 builder.setContentTitle(title);
                 builder.setContentText(message);
+                builder.setSmallIcon(R.mipmap.ic_launcher);
                 managerCompat.notify(1, builder.build());
             }
         }
