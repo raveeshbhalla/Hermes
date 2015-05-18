@@ -22,7 +22,7 @@ public class ExponentialBackoffReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, time, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         manager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + time, pendingIntent);
-        Log.d(Hermes.TAG, "Exponential Backoff Set for " + time);
+        Log.d("Hermes", "Exponential Backoff Set for " + time);
         if (Hermes.CALLBACK != null){
             Hermes.CALLBACK.setExponentialBackoff(time);
         }
@@ -37,7 +37,7 @@ public class ExponentialBackoffReceiver extends BroadcastReceiver {
             if (Hermes.CALLBACK != null){
                 Hermes.CALLBACK.backoffComplete(backedOff);
             }
-            Log.d(Hermes.TAG, "Exponential backoff complete after "+ backedOff);
+            Log.d("Hermes", "Exponential backoff complete after " + backedOff);
             Hermes.register(context, intent.getStringExtra(EXTRA_SENDER_ID));
             Hermes.setDelay(backedOff*2);
         }

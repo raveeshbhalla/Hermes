@@ -21,8 +21,6 @@ import in.raveesh.hermes.receivers.ExponentialBackoffReceiver;
  */
 public class Hermes {
 
-    public static final String TAG = "Hermes";
-
     public final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
@@ -46,7 +44,7 @@ public class Hermes {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                Log.d(TAG, "Google Play Services is not available, but the issue is User Recoverable");
+                Log.d("Hermes", "Google Play Services is not available, but the issue is User Recoverable");
                 if (context instanceof Activity) {
                     GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity) context, PLAY_SERVICES_RESOLUTION_REQUEST).show();
                 }
@@ -54,7 +52,7 @@ public class Hermes {
                 /**
                  * TODO: Handle all issue related to non User recoverable error
                  */
-                Log.e(TAG, "Non user recoverable error while checking for Play Services");
+                Log.d("Hermes", "Non user recoverable error while checking for Play Services");
             }
             return false;
         }
@@ -75,10 +73,12 @@ public class Hermes {
             CALLBACK = callback;
         }
 
+        Log.d("Hermes", "Registering... ");
+
         SENDER_ID = senderID;
         if (checkPlayServices(context)) {
             gcm = GoogleCloudMessaging.getInstance(context);
-            regID = getRegistrationId(context);
+            regID = getRegIdFromSharedPrefs(context);
             if (regID.isEmpty()) {
                 registerInBackground(context);
             }
@@ -99,20 +99,22 @@ public class Hermes {
      * @return registration ID, or empty string if there is no existing
      *         registration ID.
      */
-    private static String getRegistrationId(Context context) {
+    private static String getRegIdFromSharedPrefs(Context context) {
         final SharedPreferences prefs = getGCMPreferences(context);
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
-        if (registrationId.isEmpty()) {
-            Log.i(TAG, "Registration not found.");
+        if (registrationId == null || registrationId.isEmpty()) {
+            Log.d("Hermes", "Registration not found.");
             return "";
         }
+        Log.d("Hermes", "Got Reg Id from prefs");
+
         // Check if app was updated; if so, it must clear the registration ID
         // since the existing registration ID is not guaranteed to work with
         // the new app version.
         int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
         int currentVersion = getAppVersion(context);
         if (registeredVersion != currentVersion) {
-            Log.i(TAG, "App version changed.");
+            Log.d("Hermes", "App version changed.");
             return "";
         }
         return registrationId;
@@ -156,9 +158,11 @@ public class Hermes {
         if (CALLBACK != null){
             CALLBACK.registrationProcessStarted();
         }
-        new AsyncTask() {
+        Log.d("Hermes", "Registers the application with GCM servers asynchronously");
+
+        new AsyncTask<Object, Void, String>() {
             @Override
-            protected Object doInBackground(Object[] params) {
+            protected String doInBackground(Object[] params) {
                 String msg = "";
                 try {
                     if (gcm == null) {
@@ -166,7 +170,7 @@ public class Hermes {
                     }
                     regID = gcm.register(SENDER_ID);
                     msg = "Device registered, registration ID=" + regID;
-
+                    Log.d("Hermes", "From Async - "+msg);
                     // You should send the registration ID to your server over HTTP,
                     // so it can use GCM/HTTP or CCS to send messages to your app.
                     // The request to your server should be authenticated if your app
@@ -179,11 +183,17 @@ public class Hermes {
 
                     // Persist the registration ID - no need to register again.
                     storeRegistrationId(context, regID);
+                    if (CALLBACK != null){
+                        CALLBACK.registrationComplete(regID);
+                    }
                 } catch (IOException ex) {
                     msg = "Error :" + ex.getMessage();
                     // If there is an error, don't just keep trying to register.
                     // Require the user to click a button again, or perform
                     // exponential back-off.
+                    ExponentialBackoffReceiver.attemptRegistration(context,
+                            Hermes.getDelay(),
+                            Hermes.getSenderId());
                 }
                 return msg;
             }
@@ -199,11 +209,11 @@ public class Hermes {
             private void storeRegistrationId(Context context, String regId) {
                 final SharedPreferences prefs = getGCMPreferences(context);
                 int appVersion = getAppVersion(context);
-                Log.i(TAG, "Saving regId on app version " + appVersion);
+                Log.d("Hermes", "Saving regId on app version " + appVersion);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString(PROPERTY_REG_ID, regId);
                 editor.putInt(PROPERTY_APP_VERSION, appVersion);
-                editor.commit();
+                editor.apply();
             }
 
             /**
