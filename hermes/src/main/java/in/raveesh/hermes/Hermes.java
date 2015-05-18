@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -43,7 +44,7 @@ public class Hermes {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                Util.log("Google Play Services is not available, but the issue is User Recoverable");
+                Log.d("Hermes", "Google Play Services is not available, but the issue is User Recoverable");
                 if (context instanceof Activity) {
                     GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity) context, PLAY_SERVICES_RESOLUTION_REQUEST).show();
                 }
@@ -51,7 +52,7 @@ public class Hermes {
                 /**
                  * TODO: Handle all issue related to non User recoverable error
                  */
-                Util.log("Non user recoverable error while checking for Play Services");
+                Log.d("Hermes", "Non user recoverable error while checking for Play Services");
             }
             return false;
         }
@@ -72,7 +73,7 @@ public class Hermes {
             CALLBACK = callback;
         }
 
-        Util.log("Registering... ");
+        Log.d("Hermes", "Registering... ");
 
         SENDER_ID = senderID;
         if (checkPlayServices(context)) {
@@ -102,10 +103,10 @@ public class Hermes {
         final SharedPreferences prefs = getGCMPreferences(context);
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
         if (registrationId == null || registrationId.isEmpty()) {
-            Util.log("Registration not found.");
+            Log.d("Hermes", "Registration not found.");
             return "";
         }
-        Util.log("Got Reg Id from prefs");
+        Log.d("Hermes", "Got Reg Id from prefs");
 
         // Check if app was updated; if so, it must clear the registration ID
         // since the existing registration ID is not guaranteed to work with
@@ -113,7 +114,7 @@ public class Hermes {
         int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
         int currentVersion = getAppVersion(context);
         if (registeredVersion != currentVersion) {
-            Util.log("App version changed.");
+            Log.d("Hermes", "App version changed.");
             return "";
         }
         return registrationId;
@@ -157,7 +158,7 @@ public class Hermes {
         if (CALLBACK != null){
             CALLBACK.registrationProcessStarted();
         }
-        Util.log("Registers the application with GCM servers asynchronously");
+        Log.d("Hermes", "Registers the application with GCM servers asynchronously");
 
         new AsyncTask<Object, Void, String>() {
             @Override
@@ -169,7 +170,7 @@ public class Hermes {
                     }
                     regID = gcm.register(SENDER_ID);
                     msg = "Device registered, registration ID=" + regID;
-                    Util.log("From Async - "+msg);
+                    Log.d("Hermes", "From Async - "+msg);
                     // You should send the registration ID to your server over HTTP,
                     // so it can use GCM/HTTP or CCS to send messages to your app.
                     // The request to your server should be authenticated if your app
@@ -208,7 +209,7 @@ public class Hermes {
             private void storeRegistrationId(Context context, String regId) {
                 final SharedPreferences prefs = getGCMPreferences(context);
                 int appVersion = getAppVersion(context);
-                Util.log("Saving regId on app version " + appVersion);
+                Log.d("Hermes", "Saving regId on app version " + appVersion);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString(PROPERTY_REG_ID, regId);
                 editor.putInt(PROPERTY_APP_VERSION, appVersion);

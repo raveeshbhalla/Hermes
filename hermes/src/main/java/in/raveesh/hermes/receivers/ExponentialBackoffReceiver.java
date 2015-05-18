@@ -5,9 +5,9 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import in.raveesh.hermes.Hermes;
-import in.raveesh.hermes.Util;
 
 public class ExponentialBackoffReceiver extends BroadcastReceiver {
     private static String ACTION = "in.raveesh.hermes.receivers.EXPONENTIAL_BACKOFF";
@@ -22,7 +22,7 @@ public class ExponentialBackoffReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, time, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         manager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + time, pendingIntent);
-        Util.log("Exponential Backoff Set for " + time);
+        Log.d("Hermes", "Exponential Backoff Set for " + time);
         if (Hermes.CALLBACK != null){
             Hermes.CALLBACK.setExponentialBackoff(time);
         }
@@ -37,7 +37,7 @@ public class ExponentialBackoffReceiver extends BroadcastReceiver {
             if (Hermes.CALLBACK != null){
                 Hermes.CALLBACK.backoffComplete(backedOff);
             }
-            Util.log("Exponential backoff complete after " + backedOff);
+            Log.d("Hermes", "Exponential backoff complete after " + backedOff);
             Hermes.register(context, intent.getStringExtra(EXTRA_SENDER_ID));
             Hermes.setDelay(backedOff*2);
         }

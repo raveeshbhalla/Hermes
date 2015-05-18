@@ -7,6 +7,9 @@ import in.raveesh.hermes.receivers.HermesBroadcastReceiver;
 
 public class GcmBroadcastReceiver extends HermesBroadcastReceiver {
     public GcmBroadcastReceiver() {
+        // IMPORTANT
+        // Call this with the intentservice class you want to start
+        // Refer javadoc for more info.
         setIntentService(GcmIntentService.class);
     }
 

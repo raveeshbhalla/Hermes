@@ -2,11 +2,11 @@ package in.raveesh.hermesexample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import in.raveesh.hermes.Hermes;
 import in.raveesh.hermes.RegistrationCallback;
-import in.raveesh.hermes.Util;
 
 
 public class MainActivity extends AppCompatActivity implements RegistrationCallback{
@@ -24,21 +24,26 @@ public class MainActivity extends AppCompatActivity implements RegistrationCallb
 
     @Override
     protected void onResume(){
-        Util.log("onResume");
+        Log.d("HermesExample", "onResume");
         super.onResume();
         Hermes.register(this, "893452105076");
     }
 
     @Override
     protected void onPause(){
-        Util.log("onPause");
+        Log.d("HermesExample", "onPause");
         super.onPause();
         Hermes.pause(this);
     }
 
+    /**
+     * Run all the UI changes task on the UI thread as these calls are called from a
+     * different thread from asynctask in {@code Hermes}
+     */
+
     @Override
     public void registrationComplete(final String id) {
-        Util.log("registrationComplete");
+        Log.d("HermesExample", "registrationComplete");
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -49,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements RegistrationCallb
 
     @Override
     public void registrationProcessStarted() {
-        Util.log("registrationProcessStarted");
+        Log.d("HermesExample", "registrationProcessStarted");
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -60,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements RegistrationCallb
 
     @Override
     public void registrationFailed(final String msg) {
-        Util.log("registrationFailed");
+        Log.d("HermesExample", "registrationFailed");
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -71,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements RegistrationCallb
 
     @Override
     public void setExponentialBackoff(final int time) {
-        Util.log("setExponentialBackoff");
+        Log.d("HermesExample", "setExponentialBackoff");
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements RegistrationCallb
 
     @Override
     public void backoffComplete(final int time) {
-        Util.log("backoffComplete");
+        Log.d("HermesExample", "backoffComplete");
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {

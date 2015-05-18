@@ -1,13 +1,10 @@
 package in.raveesh.hermesexample;
 
 import android.content.Intent;
+import android.util.Log;
 
-import in.raveesh.hermes.Util;
 import in.raveesh.hermes.receivers.HermesIntentService;
 
-/**
- * Created by sahil on 15/5/15.
- */
 public class GcmIntentService extends HermesIntentService {
 
     public GcmIntentService() {
@@ -21,7 +18,7 @@ public class GcmIntentService extends HermesIntentService {
 
     @Override
     public void messageReceived() {
-        Util.log("Message Received in overridden method");
+        Log.d("HermesExample", "Message Received in overridden method");
     }
 
     @Override
